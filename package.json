@@ -9,7 +9,7 @@
     "grunt-contrib-concat": "*",
     "grunt-contrib-jshint": "*",
     "grunt-preprocess": "*",
-    "grunt-contrib-uglify": "*"
+    "grunt-contrib-uglify": "*",
     "grunt-simple-mocha": "*",
     "grunt-contrib-jshint": "*",
     "mocha": "*",
