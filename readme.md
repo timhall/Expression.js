@@ -1,6 +1,6 @@
 # Expression.js
 
-Advanced expression evaluator in javascript
+Advanced and extensible mathematical expression evaluator in javascript
 
 ```javascript
 // Simple equation (the following occurs with no evals)
@@ -16,16 +16,16 @@ equation.evaluate({ x: 30, y: -1 });       // Fast evaluation
 // ----------------------
 Expression('min(x, abs(y), max(z, 25))').evaluate({ x: 4, y: -100, z: 10 }); // = 4
 
-// Use custom functions
-// --------------------
-Expression.functions['add'] = function () {
+// Extend with custom functions
+// ----------------------------
+Expression.functions['sum'] = function () {
     var result = 0;
     for (var i = 0, max = arguments.length; i < max; i += 1) {
         return += arguments[i];
     }
     return result;
 }
-Expression('add(1, 2, 3, 4)').evaluate(); // = 10
+Expression('sum(1, 2, 3, 4)').evaluate(); // = 10
 
 // Override operations
 // -------------------
