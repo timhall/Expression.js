@@ -21,7 +21,7 @@ Expression('min(x, abs(y), max(z, 25))').evaluate({ x: 4, y: -100, z: 10 }); // 
 Expression.functions['sum'] = function () {
     var result = 0;
     for (var i = 0, max = arguments.length; i < max; i += 1) {
-        return += arguments[i];
+        result += arguments[i];
     }
     return result;
 }
