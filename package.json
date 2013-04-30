@@ -1,18 +1,30 @@
 {
   "name": "Expression.js",
+  "description": "Advanced expression evaluator in javascript",
   "version": "0.0.0",
-  "description": "",
-  "dependencies": {
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-jshint": "~0.4.3",
-    "grunt-preprocess": "~2.3.0",
-    "grunt-contrib-uglify": "~0.2.0"
+  "author": "Tim Hall <tim.hall.engr@gmail.com>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-preprocess": "*",
+    "grunt-contrib-uglify": "*"
+    "grunt-simple-mocha": "*",
+    "grunt-contrib-jshint": "*",
+    "mocha": "*",
+    "chai": "*",
+    "grunt-contrib-watch": "*"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/timhall/Expression.js.git"
+    "url": "git://github.com/timhall/Expression.js"
   },
-  "author": "",
-  "license": "MIT"
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "directories": {
+    "test": "test"
+  }
 }
