@@ -139,7 +139,7 @@ Expression.utils = (function () {
     };
 
     /**
-     * Find the index of the first occurance of value in the given array (using ===)
+     * Find the index of the first occurence of value in the given array (using ===)
      *
      * @param {Array} array
      * @param {Mixed} value
@@ -150,6 +150,25 @@ Expression.utils = (function () {
             length = array ? array.length : 0;
 
         while (++index < length) {
+            if (array[index] === value) {
+                return index;
+            }
+        }
+        return -1;
+    };
+
+    /**
+     * Find the index of the first occurence of the value from the right of the given array
+     *
+     * @param {Array} array
+     * @param {Mixed} value
+     * @param {start} [Number]
+     * @return {Number} index or -1
+     */
+    var indexOfFromRight = function (array, value, start) {
+        var index = start !== undefined ? start : array.length - 1;
+
+        while (index-- > 0) {
             if (array[index] === value) {
                 return index;
             }
@@ -190,6 +209,7 @@ Expression.utils = (function () {
         each: each,
         forEach: each,
         indexOf: indexOf,
+        indexOfFromRight: indexOfFromRight,
         extend: extend
     };
 }());

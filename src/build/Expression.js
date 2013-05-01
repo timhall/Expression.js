@@ -19,6 +19,7 @@
 // @include ../toRPN.js
 // @include ../evaluateRPN.js
 // @include ../operators.js
+// @include ../functions.js
     
 return Expression;
 

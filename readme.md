@@ -19,7 +19,7 @@ Expression('min(x, abs(y), sqrt(z), ceil(5.25))').evaluate({ x: 4, y: -100, z: 2
 
 // Available functions
 // general: sqrt, log, abs, 
-// geometry: sin, cos, tan, asin, acos, atan, atan2
+// trig: sin, cos, tan, asin, acos, atan, atan2
 // rounding: round, ceil, floor
 ```
 

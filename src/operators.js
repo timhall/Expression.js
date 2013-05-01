@@ -19,5 +19,5 @@ Expression.operators = {
     '-': Expression.operator(3, 'left', function subtract(a, b) { return a - b; }),
     '*': Expression.operator(5, 'left', function multiply(a, b) { return a * b; }),
     '/': Expression.operator(5, 'left', function divide(a, b) { return a / b; }),
-    '^': Expression.operator(6, 'left', function power(a, b) { return a ^ b; })
+    '^': Expression.operator(6, 'left', function power(a, b) { return Math.pow(a, b); })
 };

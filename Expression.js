@@ -190,7 +190,7 @@ Expression.utils = (function () {
     };
 
     /**
-     * Find the index of the first occurance of value in the given array (using ===)
+     * Find the index of the first occurence of value in the given array (using ===)
      *
      * @param {Array} array
      * @param {Mixed} value
@@ -201,6 +201,25 @@ Expression.utils = (function () {
             length = array ? array.length : 0;
 
         while (++index < length) {
+            if (array[index] === value) {
+                return index;
+            }
+        }
+        return -1;
+    };
+
+    /**
+     * Find the index of the first occurence of the value from the right of the given array
+     *
+     * @param {Array} array
+     * @param {Mixed} value
+     * @param {start} [Number]
+     * @return {Number} index or -1
+     */
+    var indexOfFromRight = function (array, value, start) {
+        var index = start !== undefined ? start : array.length - 1;
+
+        while (index-- > 0) {
             if (array[index] === value) {
                 return index;
             }
@@ -241,6 +260,7 @@ Expression.utils = (function () {
         each: each,
         forEach: each,
         indexOf: indexOf,
+        indexOfFromRight: indexOfFromRight,
         extend: extend
     };
 }());
@@ -280,7 +300,7 @@ Expression.toRPN = function (tokens) {
 Expression.evaluateRPN = (function () {
     function evaluateRPN(RPN) {
         var result = 0,
-            operation;
+            operation, leftIndex, fn;
 
         if (RPN.length === 1) {
             result = RPN[0];
@@ -288,22 +308,46 @@ Expression.evaluateRPN = (function () {
             Expression.utils.each(RPN, function (value, index) {
                 if (Expression.utils.isOperator(value)) {
                     // Evaluate operation and replace in RPN stack
-                    operation = Expression.operators[value].fn(RPN[index - 2], RPN[index - 1]);
-                    RPN.splice(index - 2, 3, operation);
-                    result = evaluateRPN(RPN);
+                    fn = Expression.operators[value].fn;
+
+                    if (fn && index - 2 >= 0) {
+                        // Evaluate
+                        operation = fn(RPN[index - 2], RPN[index - 1]);
+
+                        // Splice in result and evaluate updated RPN stack
+                        RPN.splice(index - 2, 3, operation);
+                        result = evaluateRPN(RPN);    
+                    } else {
+                        // Throw
+                    }                    
 
                     return false;
                 } else if (value === ')') {
                     // Evaluate function
+                    leftIndex = Expression.utils.indexOfFromRight(RPN, '(', index);
+                    if (leftIndex >= 0 && index > leftIndex && index + 1 < RPN.length) {
+                        fn = Expression.functions[RPN[index + 1]];
+
+                        if (fn) {
+                            // Evaluate
+                            operation = fn.apply(undefined, RPN.slice(leftIndex + 1, index));
+                            
+                            // Splice in result and evaluate updated RPN stack
+                            RPN.splice(leftIndex, index + 1 - leftIndex + 1, operation);
+                            result = evaluateRPN(RPN);
+                        } else {
+                            // Throw
+                        }
+                    } else {
+                        // Throw
+                    }
 
                     return false;
                 } else {
                     // Continue
                 }
             });
-        }   
-
-        
+        }
 
         // [3, 4, 5, 6, +, (, 7, 8, *, ), sin, +, *, +, 12, +]
         // [3, 4, 11, (, 7, 8, *, ), sin, +, *, +, 12, +]
@@ -342,8 +386,41 @@ Expression.operators = {
     '-': Expression.operator(3, 'left', function subtract(a, b) { return a - b; }),
     '*': Expression.operator(5, 'left', function multiply(a, b) { return a * b; }),
     '/': Expression.operator(5, 'left', function divide(a, b) { return a / b; }),
-    '^': Expression.operator(6, 'left', function power(a, b) { return a ^ b; })
+    '^': Expression.operator(6, 'left', function power(a, b) { return Math.pow(a, b); })
 };
+
+// Default functions
+Expression.functions = Expression.utils.extend({
+    // Built-in Math functions
+    'sqrt': Math.sqrt,
+    'log': Math.log,
+    'abs': Math.abs,
+    'sin': Math.sin,
+    'cos': Math.cos,
+    'tan': Math.tan,
+    'asin': Math.asin,
+    'acos': Math.acos,
+    'atan': Math.atan,
+    'atan2': Math.atan2,
+    'round': Math.round,
+    'ceil': Math.ceil,
+    'floor': Math.floor
+}, {
+    // Custom functions
+    '-': function negate(value) {
+        return -(value);
+    },
+    'max': function max() {
+        var values = Array.prototype.slice.call(arguments), 
+            result;
+
+        Expression.utils.each(values, function (value) {
+            if (result === undefined || value > result) { result = value; } 
+        });
+
+        return result;
+    }
+});
 
     
 return Expression;
