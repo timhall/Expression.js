@@ -52,13 +52,28 @@ Expression.prototype.evaluate = function (variables) {
 // Utilities
 // Thanks [Lo-Dash](http://lodash.com/)!
 Expression.utils = (function () {
-    
-    // Determine if given value is a string
+    var objectRef = {},
+        hasOwnProperty = objectRef.hasOwnProperty,
+        nativeForEach = Array.prototype.forEach,
+        slice = Array.prototype.slice,
+        isNumberRegExp = /-?[0-9]+(\.[0-9]+)?/;
+
+    /**
+     * Determine if given value is a string
+     * 
+     * @param {Varies} value
+     * @return {Boolean} isString
+     */
     var isString = function (value) {
         return typeof value === 'string' || Expression.utils.toString(value) === '[object String]';
     };
 
-    // Determine if given value is a function (with fallback)
+    /**
+     * Determine if given value is a function (with fallback)
+     * 
+     * @param {Varies} value
+     * @return {Boolean} isFunction
+     */
     var isFunction = function (value) {
         return typeof value === 'function';
     };
@@ -68,23 +83,69 @@ Expression.utils = (function () {
         };
     }
 
-    // Determine if given value is an array
+    /**
+     * Determine if given value is an array
+     * 
+     * @param {Varies} value
+     * @return {Boolean} isArray
+     */
     var isArray = Array.isArray || function (value) {
         return value ? (typeof value === 'object' && toString(value) === '[object Array]') : false;
     };
 
-    // Check if object has own property
+    /**
+     * Determine if given string is a number 
+     * 
+     * @param {Varies} value
+     * @return {Boolean} isNumber
+     */
+    var isNumber = function (value) {
+        if (isString(value)) {
+            return isNumberRegExp.test(value);    
+        } else {
+            return typeof value === 'number' || toString(value) === '[object Number]';
+        }
+    };
+
+    /**
+     * Determine if given value is an operator
+     *
+     * @param {Mixed} value
+     * @return {Boolean} isOperator
+     */
+    var isOperator = function (value) {
+        
+    };
+
+    /**
+     * Check if object has own property
+     * 
+     * @param {Object} obj
+     * @param {String} property
+     * @return {Boolean} hasOwnProperty
+     */
     var has = function (obj, property) {
-        return Object.prototype.hasOwnProperty.call(obj, property);
+        return hasOwnProperty.call(obj, property);
     };
 
-    // Determine class name of given value
+    /**
+     * Determine class name of given value
+     * 
+     * @param {Varies} value
+     * @return {String} Class name of value, e.g. "[object Array]"
+     */
     var toString = function (value) {
-        return {}.toString.call(value);   
+        return objectRef.toString.call(value);   
     };
 
-    // Iterate through array/object with iterator
-    var nativeForEach = Array.prototype.forEach;
+    /**
+     * Iterate through array/object with iterator
+     * 
+     * @param {Object|Array} obj
+     * @param {Function} iterator(item, index|key, obj)
+     * @param {Varies} [context] to call iterator with
+     * @chainable (obj)
+     */
     var each = function (obj, iterator, context) {
         if (!obj || !iterator) { return; }
 
@@ -112,9 +173,35 @@ Expression.utils = (function () {
         return obj;
     };
 
+    /**
+     * Find the index of the first occurance of value in the given array (using ===)
+     *
+     * @param {Array} array
+     * @param {Mixed} value
+     * @return {Number} index or -1
+     */
+    var indexOf = function (array, value) {
+        var index = -1,
+            length = array ? array.length : 0;
+
+        while (++index < length) {
+            if (array[index] === value) {
+                return index;
+            }
+        }
+        return -1;
+    };
+
+    /**
+     * Extend object with parameters from given source objects
+     * 
+     * @param {Object} obj
+     * @param {Object...} Source objects
+     * @return {Object} Extended object
+     */
     // Extend object with other objects
     var extend = function (obj) {
-        each(Array.prototype.slice.call(arguments, 1), function (source) {
+        each(slice.call(arguments, 1), function (source) {
             if (source) {
                 for (var prop in source) {
                     obj[prop] = source[prop];
@@ -129,11 +216,15 @@ Expression.utils = (function () {
         isString: isString,
         isFunction: isFunction,
         isArray: isArray,
+        isNumber: isNumber,
+        isOperator: isOperator,
         has: has,
 
         toString: toString,
         each: each,
-        forEach: each
+        forEach: each,
+        indexOf: indexOf,
+        extend: extend
     };
 }());
 
@@ -169,52 +260,56 @@ Expression.toRPN = function (tokens) {
  * @return {Varies}
  * @static
  */
-Expression.evaluateRPN = function (RPN) {
-    var result = 0;
+Expression.evaluateRPN = (function () {
+    function evaluateRPN(RPN) {
+        Expression.utils.each(RPN, function (value, index) {
+            if (Expression.utils.isOperator(value)) {
+                
+            } else if (value === ')') {
+                
+            } else {
+                
+            }
+        });
 
-    Expression.utils.each(RPN, function (item, index) {
-        if (Expression.utils.isString(item)) {
-            
-        } else {
-            
-        }
-    });
+        // [3, 4, 5, 6, +, (, 7, 8, *, ), sin, +, *, +, 12, +]
+        // [3, 4, 11, (, 7, 8, *, ), sin, +, *, +, 12, +]
+        // [3, 4, 11, (, 56, ), sin, +, *, +, 12, +]
+        // [3, 4, 11, sin(56), +, *, +, 12, +]
+        // [3, 4, 11 + sin(56), *, +, 12, +]
+        // [3, 4, 11 + sin(56), *, +, 12, +]
+        // [3, 4*(11 + sin(56)), +, 12, +]
+        // [3+4*(11 + sin(56)), 12, +]
+        // = 3+4*(11 + sin(56))+12
 
-    return result; 
+        return 0; 
+    }
+
+    return evaluateRPN;
+}());
+
+/**
+ * @class Operator
+ *
+ * @param {Function} fn
+ * @param {Number} precedence
+ * @param {String} associative (right|left)
+ */
+Expression.operator = function (fn, precedence, associative) {
+    return {
+        fn: fn,
+        precedence: precedence,
+        associative: associative
+    };
 };
 
 // Default operators
 Expression.operators = {
-    precedence: {
-        '+': 3,
-        '-': 3,
-        '*': 5,
-        '/': 5,
-        '^': 6
-    },
-    associative: {
-        '+': 'left',
-        '-': 'left',
-        '*': 'left',
-        '/': 'left',
-        '^': 'right'
-    },
-
-    '+': function add(a, b) {
-        return a + b;
-    },
-    '-': function subtract(a, b) {
-        return a - b;
-    },
-    '*': function multiply(a, b) {
-        return a * b;
-    },
-    '/': function divide(a, b) {
-        return a / b;
-    },
-    '^': function power(a, b) {
-        return a ^ b;
-    }
+    '+': Expression.operator(3, 'left', function add(a, b) { return a + b; }),
+    '-': Expression.operator(3, 'left', function subtract(a, b) { return a - b; }),
+    '*': Expression.operator(5, 'left', function multiply(a, b) { return a * b; }),
+    '/': Expression.operator(5, 'left', function divide(a, b) { return a / b; }),
+    '^': Expression.operator(6, 'left', function power(a, b) { return a ^ b; })
 };
 
     

@@ -5,16 +5,30 @@
  * @return {Varies}
  * @static
  */
-Expression.evaluateRPN = function (RPN) {
-    var result = 0;
+Expression.evaluateRPN = (function () {
+    function evaluateRPN(RPN) {
+        Expression.utils.each(RPN, function (value, index) {
+            if (Expression.utils.isOperator(value)) {
+                
+            } else if (value === ')') {
+                
+            } else {
+                
+            }
+        });
 
-    Expression.utils.each(RPN, function (item, index) {
-        if (Expression.utils.isString(item)) {
-            
-        } else {
-            
-        }
-    });
+        // [3, 4, 5, 6, +, (, 7, 8, *, ), sin, +, *, +, 12, +]
+        // [3, 4, 11, (, 7, 8, *, ), sin, +, *, +, 12, +]
+        // [3, 4, 11, (, 56, ), sin, +, *, +, 12, +]
+        // [3, 4, 11, sin(56), +, *, +, 12, +]
+        // [3, 4, 11 + sin(56), *, +, 12, +]
+        // [3, 4, 11 + sin(56), *, +, 12, +]
+        // [3, 4*(11 + sin(56)), +, 12, +]
+        // [3+4*(11 + sin(56)), 12, +]
+        // = 3+4*(11 + sin(56))+12
 
-    return result; 
-};
+        return 0; 
+    }
+
+    return evaluateRPN;
+}());
