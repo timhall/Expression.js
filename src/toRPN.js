@@ -4,6 +4,6 @@
  * @param {Array} tokens
  * @return {Array} RPN operations stack
  */
-Expression.convertToRPN = function (tokens) {
+Expression.toRPN = function (tokens) {
         
 };

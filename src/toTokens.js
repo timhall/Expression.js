@@ -5,7 +5,7 @@
  * @return {Array} of String
  * @static
  */
-Expression.convertToTokens = function (expression) {
+Expression.toTokens = function (expression) {
     var tokens = [];
 
     tokens = expression.split(' ');
