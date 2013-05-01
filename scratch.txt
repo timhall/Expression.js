@@ -14,3 +14,5 @@ rules: [
 ]
 
 http://www.seas.gwu.edu/~csci133/fall04/133f04toRPN.html
+
+http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
