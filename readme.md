@@ -11,13 +11,20 @@ var equation = Expression('3*x + sin(y)'); // Initial compilation
 equation.evaluate({ x: 10, y: 0 });        // Fast evaluation
 equation.evaluate({ x: 20, y: 1 });        // Fast evaluation
 equation.evaluate({ x: 30, y: -1 });       // Fast evaluation
+```
 
-// Use built-in functions
-// ----------------------
-Expression('min(x, abs(y), max(z, 25))').evaluate({ x: 4, y: -100, z: 10 }); // = 4
+# Use built-in functions
+```javascript
+Expression('min(x, abs(y), sqrt(z), ceil(5.25))').evaluate({ x: 4, y: -100, z: 25 }); // = 4
 
-// Extend with custom functions
-// ----------------------------
+// Available functions
+// general: sqrt, log, abs, 
+// geometry: sin, cos, tan, asin, acos, atan, atan2
+// rounding: round, ceil, floor
+```
+
+# Extend with custom functions
+```javascript
 Expression.functions['sum'] = function () {
     var result = 0;
     for (var i = 0, max = arguments.length; i < max; i += 1) {
@@ -26,15 +33,20 @@ Expression.functions['sum'] = function () {
     return result;
 }
 Expression('sum(1, 2, 3, 4)').evaluate(); // = 10
+```
 
-// Override operations
-// -------------------
+# Override and extend all built-in functionality
+```javascript
+// Floating point operations can have surprising results by default
 Expression('0.3 - 0.1').evaluate(); // = 0.19999999999999998
 
-// (use [big.js](https://github.com/MikeMcl/big.js) for precise decimal arithmetic
-Expression.operations['-'] = function (a, b) {
-    return parseFloat(Big(a).minus(Big(b)));
+// Use [big.js](https://github.com/MikeMcl/big.js) for precise decimal arithmetic
+Expression.operators['-'] = function (a, b) {
+    a = Big(a);
+    b = Big(b);
+    return parseFloat(a.minus(b));
 }
 
+// Try the same operation again with new big.js method
 Expression('0.3 - 0.1').evaluate(); // = 0.2
 ```

@@ -6,5 +6,5 @@
  * @static
  */
 Expression.evaluateRPN = function (RPN) {
-        
+    return 5; 
 };

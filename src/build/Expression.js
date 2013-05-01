@@ -14,9 +14,10 @@
 "use strict";
 
 // @include ../Expression.js
-// @include ../convertToTokens.js
-// @include ../convertToRPN.js
+// @include ../toTokens.js
+// @include ../toRPN.js
 // @include ../evaluateRPN.js
+// @include ../operators.js
     
 return Expression;
 

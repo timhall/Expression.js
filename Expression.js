@@ -37,19 +37,26 @@ function Expression(expression, options) {
 }
 
 Expression.defaults = {};
-Expression.operators = {};
 Expression.functions = {};
 
 /**
-    * Evaluate expression using given variables
-    *
-    * @param {Object} variables
-    * @return {Varies}
-    */
+ * Evaluate expression using given variables
+ *
+ * @param {Object} variables
+ * @return {Varies}
+ */
 Expression.prototype.evaluate = function (variables) {
 
+};
 
-    return Expression.evaluateRPN(this._rpn);
+// Utilities
+Expression.utils = {
+    toString: function (value) {
+        return {}.toString.call(value);   
+    },
+    isString: function (value) {
+        return typeof value === 'string' || Expression.utils.toString(value) === '[object String]';
+    }  
 };
 
 /**
@@ -59,7 +66,7 @@ Expression.prototype.evaluate = function (variables) {
  * @return {Array} of String
  * @static
  */
-Expression.convertToTokens = function (expression) {
+Expression.toTokens = function (expression) {
     var tokens = [];
 
     tokens = expression.split(' ');
@@ -73,7 +80,7 @@ Expression.convertToTokens = function (expression) {
  * @param {Array} tokens
  * @return {Array} RPN operations stack
  */
-Expression.convertToRPN = function (tokens) {
+Expression.toRPN = function (tokens) {
         
 };
 
@@ -85,7 +92,36 @@ Expression.convertToRPN = function (tokens) {
  * @static
  */
 Expression.evaluateRPN = function (RPN) {
-        
+    return 5; 
+};
+
+// Default operators
+Expression.operators = {
+    precedence: {
+        '+': 3,
+        '-': 3,
+        '*': 5,
+        '/': 5
+    },
+    associative: {
+        '+': 'left',
+        '-': 'left',
+        '*': 'left',
+        '/': 'left'
+    },
+
+    '+': function add(a, b) {
+        return a + b;
+    },
+    '-': function subtract(a, b) {
+        return a - b;
+    },
+    '*': function multiply(a, b) {
+        return a * b;
+    },
+    '/': function divide(a, b) {
+        return a / b;
+    }
 };
 
     

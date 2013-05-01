@@ -19,17 +19,24 @@ function Expression(expression, options) {
 }
 
 Expression.defaults = {};
-Expression.operators = {};
 Expression.functions = {};
 
 /**
-    * Evaluate expression using given variables
-    *
-    * @param {Object} variables
-    * @return {Varies}
-    */
+ * Evaluate expression using given variables
+ *
+ * @param {Object} variables
+ * @return {Varies}
+ */
 Expression.prototype.evaluate = function (variables) {
 
+};
 
-    return Expression.evaluateRPN(this._rpn);
+// Utilities
+Expression.utils = {
+    toString: function (value) {
+        return {}.toString.call(value);   
+    },
+    isString: function (value) {
+        return typeof value === 'string' || Expression.utils.toString(value) === '[object String]';
+    }  
 };
