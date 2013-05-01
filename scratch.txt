@@ -12,3 +12,5 @@ rules: [
     ["\\/",                    "return '/';"],
     ["$",                      "return 'EOF';"]
 ]
+
+http://www.seas.gwu.edu/~csci133/fall04/133f04toRPN.html

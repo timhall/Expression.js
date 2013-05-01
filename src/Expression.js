@@ -11,7 +11,7 @@ function Expression(expression, options) {
     }
 
     this.expression = expression;
-    this.options = {};
+    this.options = Expression.utils.extend({}, Expression.defaults, options);
 
     // Convert expression to RPN and prepare for evaluation
     this._tokens = Expression.convertToTokens(this.expression);
@@ -29,14 +29,4 @@ Expression.functions = {};
  */
 Expression.prototype.evaluate = function (variables) {
 
-};
-
-// Utilities
-Expression.utils = {
-    toString: function (value) {
-        return {}.toString.call(value);   
-    },
-    isString: function (value) {
-        return typeof value === 'string' || Expression.utils.toString(value) === '[object String]';
-    }  
 };
