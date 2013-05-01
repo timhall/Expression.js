@@ -3,11 +3,11 @@ var expect = require('chai').expect,
     fixtures = {};
 
 describe('evaluateRPN', function () {
-    it.skip('should evalute simple RPN operations', function () {
+    it('should evalute simple RPN operations', function () {
         expect(evaluateRPN([3, 4, '+'])).to.equal(7);
     });
 
-    it.skip('should evaluate simple arithmetic', function () {
+    it('should evaluate simple arithmetic', function () {
         expect(evaluateRPN([3, 4, '+', 5, '-', 6, '*', 6, '/'])).to.equal(2);    
     });
 });

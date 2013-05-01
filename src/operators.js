@@ -5,7 +5,7 @@
  * @param {Number} precedence
  * @param {String} associative (right|left)
  */
-Expression.operator = function (fn, precedence, associative) {
+Expression.operator = function (precedence, associative, fn) {
     return {
         fn: fn,
         precedence: precedence,
