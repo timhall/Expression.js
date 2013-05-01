@@ -32,6 +32,22 @@ describe('utils', function () {
         });
     });
 
+    describe('isOperator', function () {
+        it('should identify standard operators', function () {
+            expect(utils.isOperator('+')).to.equal(true); 
+            expect(utils.isOperator('-')).to.equal(true);
+            expect(utils.isOperator('*')).to.equal(true);
+            expect(utils.isOperator('/')).to.equal(true);
+            expect(utils.isOperator('^')).to.equal(true);
+        });
+
+        it('should not identify negative numbers or functions', function () {
+            expect(utils.isOperator(-4.123)).to.equal(false);
+            expect(utils.isOperator('-4.123')).to.equal(false);
+            expect(utils.isOperator('sin')).to.equal(false);
+        })
+    });
+
     describe('has', function () {
         it('should identify owned properties', function () {
             var test = {

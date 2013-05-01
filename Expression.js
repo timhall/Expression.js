@@ -54,6 +54,7 @@ Expression.prototype.evaluate = function (variables) {
 Expression.utils = (function () {
     var objectRef = {},
         hasOwnProperty = objectRef.hasOwnProperty,
+        nativeKeys = Object.keys,
         nativeForEach = Array.prototype.forEach,
         slice = Array.prototype.slice,
         isNumberRegExp = /-?[0-9]+(\.[0-9]+)?/;
@@ -114,7 +115,7 @@ Expression.utils = (function () {
      * @return {Boolean} isOperator
      */
     var isOperator = function (value) {
-        
+        return indexOf(keys(Expression.operators), value) > -1;
     };
 
     /**
@@ -136,6 +137,21 @@ Expression.utils = (function () {
      */
     var toString = function (value) {
         return objectRef.toString.call(value);   
+    };
+
+    /**
+     * Get all owned keys for given object
+     *
+     * @param {Object} obj
+     * @return {Array} of String keys
+     */
+    var keys = nativeKeys || function (obj) {
+        if (obj !== Object(obj)) { throw new TypeError('Invalid object'); }
+        var keys = [];
+        for (var key in obj) {
+            if (has(obj, key)) { keys[keys.length] = key; }
+        }
+        return keys;
     };
 
     /**
@@ -221,6 +237,7 @@ Expression.utils = (function () {
         has: has,
 
         toString: toString,
+        keys: keys,
         each: each,
         forEach: each,
         indexOf: indexOf,
