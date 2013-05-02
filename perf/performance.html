@@ -32,11 +32,6 @@
         var value = Math.round(Math.random() * 10);
         Expression.evaluateRPN(['(', value, '(', 2, 3, '-', ')', 'abs', '+', ')', 'sqrt']); 
     });
-
-    JSLitmus.test('RPN Evaluation 2', function () {
-        var value = Math.round(Math.random() * 10);
-        Expression.evaluateRPN2(value); //['(', value, '(', 2, 3, '-', ')', 'abs', '+', ')', 'sqrt']); 
-    });
 </script>
 </body>
 </html>
