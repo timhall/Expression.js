@@ -11,19 +11,17 @@
 <script src="../Expression.js"></script>     
 
 <script type="text/javascript">
-    var nativeFn = function (value) {
-        var result = Math.sqrt(value + Math.abs(2 - 3)); 
-    };
-    var evalFn = function (value) {
+    var evalFn = new Function('value', 'return Math.sqrt(value + Math.abs(2 - 3))');
+    var evalInline = function (value) {
         var result = eval('Math.sqrt(' + value + ' + Math.abs(2 - 3))');
     };
 
-    JSLitmus.test('Native', function () {
+    JSLitmus.test('Eval Inline', function () {
         var value = Math.round(Math.random() * 10);
-        nativeFn(value);
+        evalInline(value);
     });
 
-    JSLitmus.test('Eval', function () {
+    JSLitmus.test('Eval Function', function () {
         var value = Math.round(Math.random() * 10);
         evalFn(value);
     });
