@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Expression.js Performance Test</title>
+</head>
+<body>
+
+<script src="lib/JSLitmus.js"></script>
+<script src="../Expression.js"></script>     
+
+<script type="text/javascript">
+    var nativeFn = function (value) {
+        var result = Math.sqrt(value + Math.abs(2 - 3)); 
+    };
+    var evalFn = function (value) {
+        var result = eval('Math.sqrt(' + value + ' + Math.abs(2 - 3))');
+    };
+
+    JSLitmus.test('Native', function () {
+        var value = Math.round(Math.random() * 10);
+        nativeFn(value);
+    });
+
+    JSLitmus.test('Eval', function () {
+        var value = Math.round(Math.random() * 10);
+        evalFn(value);
+    });
+
+    JSLitmus.test('RPN Evaluation 1', function () {
+        var value = Math.round(Math.random() * 10);
+        Expression.evaluateRPN(['(', value, '(', 2, 3, '-', ')', 'abs', '+', ')', 'sqrt']); 
+    });
+
+    JSLitmus.test('RPN Evaluation 2', function () {
+        var value = Math.round(Math.random() * 10);
+        Expression.evaluateRPN2(value); //['(', value, '(', 2, 3, '-', ')', 'abs', '+', ')', 'sqrt']); 
+    });
+</script>
+</body>
+</html>

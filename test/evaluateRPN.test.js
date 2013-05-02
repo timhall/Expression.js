@@ -1,5 +1,5 @@
 var expect = require('chai').expect,
-    evaluateRPN = require('../Expression.js').evaluateRPN,
+    evaluateRPN = require('../Expression.js').evaluateRPN2,
     fixtures = {};
 
 describe('evaluateRPN', function () {
