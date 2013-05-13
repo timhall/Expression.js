@@ -1,139 +1,17 @@
-rules: [
-    ["\\s+",                   "/* Skip whitespace! */"],
-    ["#.*\\n",                 "/* Skip comments! */"],
-    [";",                      "return 'SEMICOLON'"],
-    ["\\-?[0-9]+(\\.[0-9]+)?", "return 'NUMBER';"],
-    ["print",                  "return 'PRINT';"],
-    ["[a-zA-Z][a-zA-Z0-9_]*",  "return 'VARIABLE';"],
-    ["=",                      "return '=';"],
-    ["\\+",                    "return '+';"],
-    ["\\-",                    "return '-';"],
-    ["\\*",                    "return '*';"],
-    ["\\/",                    "return '/';"],
-    ["$",                      "return 'EOF';"]
-]
+Using `new Function('...')` for fast compilation
+BUT, how to make it safe and extend standard functionality?
+-> Break expression down and then rebuild it into safe string
 
-http://www.seas.gwu.edu/~csci133/fall04/133f04toRPN.html
+Expression('y = sum([x, 14 / 3, abs(-27), 5^2])').evaluate({ x: 13 });
+
+=> new Function("state", "fn", "bi", "un", "state['y'] = fn['sum']([state['x'], 14 / 3, fn['abs'](fn[-](27)), 5^2]); return state;");
+=> new Function("state", "fn", "bi", "un", "state['y'] = fn['sum']([state['x'], bi['/'](14, 3), fn['abs'](un['-'](27)), bi['^'](5, 2)]); return state;");
+
+`state` has only "static" values and is passed in and out of function
+`fn` holds all available functions so only allowed functions can be called
+     (e.g. fn['eval'] is not available)
+`bi` is for binary operations
+`un` is for unary operations
 
 http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
 
-Identify "function":
-Preceded by operation or ( or , or nothing (first in stack)
--> Will find "-" and treat as negation function (return -(value))
---> Keep negatives out of variable identification, but ok to include in number identification:
-    /-?[0-9]+(\.[0-9]+)?/ (Handles both floating point and negative)
-
-Example:
-3+4*max(5+6,sin(7*8)+3,4^7)+12
-
-3
-[]
-3
-+
-34
-+
-34
-+*
-34
-+*max
-34(     Note: Add ( to numeric stack when ( is preceded by fn
-+*max(
-34(5
-+*max(
-34(5
-+*max(+
-34(56
-+*max(+
-34(56
-+*max(+,
---> , triggers unwind to closest ( and don't add , after unwind
---> 34(56+  Note: Ignore , ( and ) in operations stack
-
-1.
-[]
-+*max(
-34(56+
-
-[]
-+*max(sin
-[(]
-+*max(sin(
-[(7]
-+*max(sin(
-[(7]
-+*max(sin(*
-[(78]
-+*max(sin(*
-[(78]
-+*max(sin(*)
---> ) triggers unwind to closest (, removing ( and ) from operations stack
---> 34(56+(78*
-
-2.
-[]
-+*max(sin
-34(56+(78*
-
-[]
-+*max(sin+
---> precendence + < sin triggers unwind of higher operations stack to closest ( and then add lower precedence operator after unwind
---> 34(56+(78*)sin  Note: Add ) preceding fn calls
-
-3.
-[]
-+*max(+
-34(56+(78*)sin
-
-[3]
-+*max(+
-[3]
-+*max(+,
---> , triggers unwind to closest (
---> 34(56+(78*)sin3+
-
-4.
-[]
-+*max(
-34(56+(78*)sin3+
-
-[4]
-+*max(
-[4]
-+*max(^
-[47]
-+*max(^
-[47]
-+*max(^)
---> 34(56+(78*)sin3+47^
-
-5.
-[]
-+*max
-34(56+(78*)sin3+47^
-
-[]
-+*max+
---> 34(56+(78*)sin3+47^)max*+
-
-6.
-[]
-+
-34(56+(78*)sin3+47^)max*+
-
-[12]
-+
---> EOF 34(56+(78*)sin3+47^)max*+12+
-
-Evaluate
---------
-Ignore (
-
-34( 11 (78*)sin3+47^)max*+12+
-34( 11 ( 56 )sin3+47^)max*+12+
-34( 11 sin56 3+47^)max*+12+
-34( 11 3+sin56 47^)max*+12+
-34( 11 3+sin56 16384)max*+12+
-34 16384 *+12+  Note: Hit ), evaluate following fn up to closest previous (
-3 65536 +12+
-65539 12+
-65551
