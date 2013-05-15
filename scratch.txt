@@ -15,3 +15,12 @@ Expression('y = sum([x, 14 / 3, abs(-27), 5^2])').evaluate({ x: 13 });
 
 http://www.engr.mun.ca/~theo/Misc/exp_parsing.htm
 
+The functions in `bi` and `un` could return a "compiled" string to reduce function calls during equation evaluation
+
+Example:
+bi['+'] = function (a, b) {
+    return 'a + b';
+}
+
+This would most likely not introduce many improvements and may long-term slow function down since compiler can optimize frequent functions (i.e. add())
+and may not be able to optimize if it's all in single function
