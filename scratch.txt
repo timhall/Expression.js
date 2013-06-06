@@ -24,3 +24,12 @@ bi['+'] = function (a, b) {
 
 This would most likely not introduce many improvements and may long-term slow function down since compiler can optimize frequent functions (i.e. add())
 and may not be able to optimize if it's all in single function
+
+Notes:
+Set only works when it's working directly on the object
+-> So passing in the current value and then overwriting it does not affect the original object
+=> This generally doesn't matter except in cases of equality. Since attempting to make the equality operation generic, need to make accessing + updating state update state object
+
+So, what are the cases for needing special equality operation?
+-> Equation solving: Can be solved with rearranging into goal functions and wouldn't need to have equality dependence
+==> Skip for now
