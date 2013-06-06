@@ -15,11 +15,6 @@
 
 // @include ../Expression.js
 // @include ../utils.js
-// @include ../toTokens.js
-// @include ../toRPN.js
-// @include ../evaluateRPN.js
-// @include ../operators.js
-// @include ../functions.js
     
 return Expression;
 

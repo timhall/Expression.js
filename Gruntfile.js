@@ -63,6 +63,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('test', ['preprocess:build', 'concat:build', 'jshint', 'simplemocha']);
-    grunt.registerTask('default', ['test']);
+    grunt.registerTask('default', ['test', 'watch']);
 
 };
