@@ -1,6 +1,7 @@
 {
     "curly": true,
     "eqeqeq": true,
+    "evil": true,
     "immed": true,
     "latedef": true,
     "newcap": true,
@@ -11,12 +12,12 @@
     "boss": true,
     "eqnull": true,
     "node": true,
-    "es5": true,
     "predef": [
         "require",
         "define",
         "describe",
         "it",
-        "expect"
+        "expect",
+        "_"
     ]
 }

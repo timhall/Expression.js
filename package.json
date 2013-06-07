@@ -11,10 +11,10 @@
     "grunt-preprocess": "*",
     "grunt-contrib-uglify": "*",
     "grunt-simple-mocha": "*",
-    "grunt-contrib-jshint": "*",
     "mocha": "*",
     "chai": "*",
-    "grunt-contrib-watch": "*"
+    "grunt-contrib-watch": "*",
+    "underscore": "~1.4.4"
   },
   "repository": {
     "type": "git",
