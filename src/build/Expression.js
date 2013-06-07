@@ -1,15 +1,15 @@
 (function (root, factory) {
     if (typeof exports === 'object') {
         // Node
-        module.exports = factory();
+        module.exports = factory(require('underscore'));
     } else if (typeof define === 'function' && define.amd) {
         // AMD
-        define(factory);
+        define(['underscore'], factory);
     } else {
         // Browser global
-        root.Expression = factory();
+        root.Expression = factory(root._);
     }
-}(this, function () {
+}(this, function (_) {
 
 "use strict";
 
